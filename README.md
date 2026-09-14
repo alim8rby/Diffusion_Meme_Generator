@@ -1,22 +1,58 @@
-Hey there! 👋
+# Diffusion Meme Generator
 
-This is my very first Streamlit app — built completely from scratch. It may be small,
-But it carries all the DNA of larger AI projects I’ll be working on in the future.
-Here’s the process I followed (and the same one you can use too):
+A Streamlit application that combines **Stable Diffusion** with **LoRA** weights to generate images from text prompts and turn them into simple memes with custom overlay text.
 
-- Start with a fresh Git repo.
-- Add new functionality step by step.
-- Build out the user interface with Streamlit.
-- Commit as I go, so I can always roll back if needed.
-- Maintain a clean environment with a virtual environment to manage dependencies.
+## Highlights
 
-This app experiments with Stable Diffusion + LoRA weights inside a simple Streamlit interface — but more importantly,
-It’s a practical example of how applied AI projects come to life.
+- Text-to-image generation with Stable Diffusion
+- LoRA-based model customization
+- Configurable batch generation
+- Automatic meme text overlay
+- CUDA acceleration when available, with CPU fallback
+- Streamlit interface for interactive generation
 
-Why I’m Sharing This?
-I’m not just showing code. I’m showing the workflow — how to go from idea to commit to working demo.
-If you’re starting your own AI projects, these same steps will guide you.
+## How It Works
 
-In Association With:
-This project was developed in association with WorldQuant’s Applied AI Lab, 
-where I’m exploring how generative AI can be both powerful and practical.
+```text
+Prompt + Meme Text
+        │
+        ▼
+   Streamlit UI
+        │
+        ▼
+ Stable Diffusion
+        │
+        ▼
+    LoRA Weights
+        │
+        ▼
+ Generated Images
+        │
+        ▼
+   Text Overlay
+```
+
+## Run Locally
+
+```bash
+git clone https://github.com/alim8rby/st-meme-app.git
+cd st-meme-app
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+The first generation may take longer because the diffusion model needs to be downloaded and loaded into memory.
+
+## Technical Stack
+
+Python · Streamlit · PyTorch · Diffusers · Transformers · Accelerate · Safetensors · Pillow
+
+## Project Context
+
+This project was developed in association with WorldQuant's Applied AI Lab as an applied experiment in generative AI, model adaptation, and interactive ML applications.
+
+## Notes
+
+The application is an experimental portfolio project rather than a production deployment. GPU hardware is recommended for practical generation speed.
