@@ -3,5 +3,6 @@ diffusers
 transformers
 accelerate
 safetensors
+peft
 pillow
 streamlit
