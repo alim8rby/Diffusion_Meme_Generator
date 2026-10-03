@@ -6,6 +6,7 @@ from PIL import ImageDraw, ImageFont
 MODEL_ID = "CompVis/stable-diffusion-v1-4"
 LORA_WEIGHTS = "rschroll/maya_model_v1_lora"
 LORA_FILE = "pytorch_lora_weights.safetensors"
+FONT_PATH = "arial.ttf"
 
 
 def get_device_config():
@@ -28,8 +29,15 @@ def load_model():
     return pipeline
 
 
-def generate_images(prompt, pipeline, n):
-    return pipeline([prompt] * n).images
+def generate_images(prompt, pipeline, n, seed=None):
+    generator = None
+    if seed is not None:
+        generator = torch.Generator(device=device).manual_seed(int(seed))
+
+    return pipeline(
+        [prompt] * n,
+        generator=generator,
+    ).images
 
 
 def add_text_to_image(
@@ -39,7 +47,7 @@ def add_text_to_image(
     outline_color="black",
     font_size=50,
     border_width=2,
-    font_path="arial.ttf",
+    font_path=FONT_PATH,
 ):
     font = ImageFont.truetype(font_path, size=font_size)
     draw = ImageDraw.Draw(image)
@@ -62,8 +70,8 @@ def add_text_to_image(
     )
 
 
-def generate_memes(prompt, text, pipeline, n):
-    images = generate_images(prompt, pipeline, n)
+def generate_memes(prompt, text, pipeline, n, seed=None):
+    images = generate_images(prompt, pipeline, n, seed=seed)
     for image in images:
         add_text_to_image(image, text)
     return images
@@ -89,6 +97,12 @@ def main():
         )
         prompt = st.text_area("Text-to-Image Prompt")
         text = st.text_area("Text to Display")
+        seed = st.number_input(
+            "Seed (optional)",
+            min_value=0,
+            value=42,
+            step=1,
+        )
         generate = st.button("Generate Images", type="primary")
 
     if generate:
@@ -101,7 +115,13 @@ def main():
 
         with st.spinner("Generating images..."):
             pipeline = load_model()
-            images = generate_memes(prompt, text, pipeline, int(num_images))
+            images = generate_memes(
+                prompt,
+                text,
+                pipeline,
+                int(num_images),
+                seed=int(seed),
+            )
 
         st.subheader("Generated Images")
         for image in images:
